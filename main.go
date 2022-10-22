@@ -45,7 +45,7 @@ func main() {
 	}
 }
 
-// generate adjective and noun with the same first letter.
+// generate generates an adjective and a noun with the same first letter.
 func generate() string {
 	for {
 		adj := petname.Adjective()

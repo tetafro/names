@@ -26,3 +26,5 @@
         image: "{{ image }}:{{ tag }}"
         state: started
         restart_policy: unless-stopped
+        networks:
+          - name: internal

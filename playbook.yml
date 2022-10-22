@@ -1,0 +1,28 @@
+---
+# Ansible playbook for service deployment. Pulls the latest image from the
+# container registry, and replaces currently running container (if exists).
+- name: Setup
+  hosts: all
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    image: ghcr.io/tetafro/names
+    tag: latest
+    container: names
+  tasks:
+    - name: Pull latest image
+      docker_image:
+        name: "{{ image }}:{{ tag }}"
+        source: pull
+        force_source: true
+
+    - name: Remove current container
+      docker_container:
+        name: "{{ container }}"
+        state: absent
+
+    - name: Run new container
+      docker_container:
+        name: "{{ container }}"
+        image: "{{ image }}:{{ tag }}"
+        state: started
+        restart_policy: unless-stopped

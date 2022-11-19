@@ -1,22 +1,36 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"text/template"
 	"time"
 
 	petname "github.com/dustinkirkland/golang-petname"
 )
 
+const shutdownTimeout = 5 * time.Second
+
 var port = flag.Int("port", 8080, "Server port number")
 
 func main() {
 	rand.Seed(time.Now().UnixNano())
 	flag.Parse()
+	log.Print("Starting...")
+
+	ctx, cancel := signal.NotifyContext(
+		context.Background(),
+		os.Interrupt,
+		syscall.SIGTERM,
+	)
+	defer cancel()
 
 	tpl, err := template.ParseFiles("index.html")
 	if err != nil {
@@ -37,9 +51,24 @@ func main() {
 	fileHandler := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fileHandler))
 
+	srv := &http.Server{
+		Addr:    fmt.Sprintf(":%d", port),
+		Handler: http.DefaultServeMux,
+	}
+
+	// Wait for stop signal
+	go func() {
+		<-ctx.Done()
+		ctx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
+		defer cancel()
+		if err := srv.Shutdown(ctx); err != nil {
+			log.Printf("Server shutdown error: %v", err)
+		}
+	}()
+
 	addr := fmt.Sprintf(":%d", *port)
 	log.Printf("Listening at %s...", addr)
-	err = http.ListenAndServe(addr, nil)
+	err = srv.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
 		log.Fatalf("Server failed with error: %v", err)
 	}

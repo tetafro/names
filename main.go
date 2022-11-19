@@ -52,7 +52,7 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", fileHandler))
 
 	srv := &http.Server{
-		Addr:    fmt.Sprintf(":%d", port),
+		Addr:    fmt.Sprintf(":%d", *port),
 		Handler: http.DefaultServeMux,
 	}
 
@@ -66,8 +66,7 @@ func main() {
 		}
 	}()
 
-	addr := fmt.Sprintf(":%d", *port)
-	log.Printf("Listening at %s...", addr)
+	log.Printf("Listening at %s...", srv.Addr)
 	err = srv.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
 		log.Fatalf("Server failed with error: %v", err)

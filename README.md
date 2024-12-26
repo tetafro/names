@@ -5,7 +5,7 @@
 
 Web-based Ubuntu release names generator.
 
-[Live version](https://names.dkrv.me).
+[Live version](https://dkrv.me/names).
 
 ## Run
 

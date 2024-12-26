@@ -76,6 +76,7 @@ func main() {
 	if err != nil && err != http.ErrServerClosed {
 		log.Fatalf("Server failed with error: %v", err)
 	}
+	log.Print("Shutdown")
 }
 
 // generate generates an adjective and a noun with the same first letter.

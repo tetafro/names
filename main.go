@@ -18,7 +18,10 @@ import (
 
 const shutdownTimeout = 5 * time.Second
 
-var port = flag.Int("port", 8080, "Server port number")
+var (
+	port     = flag.Int("port", 8080, "Server port number")
+	basePath = flag.String("basePath", "", "Base path for routing")
+)
 
 func main() {
 	rand.Seed(time.Now().UnixNano())
@@ -39,9 +42,11 @@ func main() {
 
 	indexHandler := func(w http.ResponseWriter, r *http.Request) {
 		data := struct {
-			Name string
+			BasePath string
+			Name     string
 		}{
-			Name: generate(),
+			BasePath: *basePath,
+			Name:     generate(),
 		}
 		w.WriteHeader(http.StatusOK)
 		tpl.Execute(w, data) // nolint: errcheck,gosec

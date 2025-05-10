@@ -28,4 +28,4 @@
         restart_policy: always
         networks:
           - name: internal
-        command: -basePath=""
+        command: -basePath="/"

@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 	"text/template"
 	"time"
@@ -46,7 +45,7 @@ func main() {
 			BasePath string
 			Name     string
 		}{
-			BasePath: strings.TrimRight(*basePath, "/"),
+			BasePath: *basePath,
 			Name:     generate(),
 		}
 		w.WriteHeader(http.StatusOK)

@@ -39,6 +39,10 @@ func main() {
 	}
 
 	indexHandler := func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "" && r.URL.Path != "/" {
+			http.NotFound(w, r)
+			return
+		}
 		data := struct {
 			BasePath string
 			Name     string

@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"math/rand"
 	"net/http"
 	"os"
 	"os/signal"
@@ -24,7 +23,6 @@ var (
 )
 
 func main() {
-	rand.Seed(time.Now().UnixNano())
 	flag.Parse()
 	log.Print("Starting...")
 

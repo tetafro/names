@@ -1,4 +1,4 @@
-FROM golang:1.24-alpine3.16 AS build
+FROM golang:1.24-alpine3.22 AS build
 
 WORKDIR /build
 
@@ -8,7 +8,7 @@ COPY . .
 
 RUN go build -o ./bin/names .
 
-FROM alpine:3.16
+FROM alpine:3.22
 
 WORKDIR /app
 
